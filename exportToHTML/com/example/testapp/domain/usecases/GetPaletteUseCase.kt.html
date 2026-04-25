@@ -1,0 +1,28 @@
+<html>
+<head>
+<title>GetPaletteUseCase.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+GetPaletteUseCase.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">usecases</span>
+
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">Palette</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">repository</span><span class="s2">.</span><span class="s1">ColorRepository</span>
+
+<span class="s0">class </span><span class="s1">GetPaletteUseCase</span><span class="s2">(</span>
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">repository: ColorRepository</span>
+<span class="s2">) {</span>
+    <span class="s1">suspend operator </span><span class="s0">fun </span><span class="s1">invoke</span><span class="s2">()</span><span class="s1">: List</span><span class="s2">&lt;</span><span class="s1">Palette</span><span class="s2">&gt; = </span><span class="s1">repository</span><span class="s2">.</span><span class="s1">getAllPalettes</span><span class="s2">()</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

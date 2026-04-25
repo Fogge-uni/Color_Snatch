@@ -1,0 +1,53 @@
+<html>
+<head>
+<title>FileUtils.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+FileUtils.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">utils</span>
+
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">Context</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">graphics</span><span class="s2">.</span><span class="s1">Bitmap</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">net</span><span class="s2">.</span><span class="s1">Uri</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">FileProvider</span>
+<span class="s1">import java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">File</span>
+<span class="s1">import java</span><span class="s2">.</span><span class="s1">io</span><span class="s2">.</span><span class="s1">FileOutputStream</span>
+
+<span class="s0">fun </span><span class="s1">saveBitmapToFile</span><span class="s2">(</span><span class="s1">context: Context</span><span class="s2">, </span><span class="s1">bitmap: Bitmap</span><span class="s2">)</span><span class="s1">: String </span><span class="s2">{</span>
+    <span class="s0">val </span><span class="s1">file </span><span class="s2">= </span><span class="s1">File</span><span class="s2">(</span><span class="s1">context</span><span class="s2">.</span><span class="s1">cacheDir</span><span class="s2">, </span><span class="s3">&quot;photo_</span><span class="s0">${</span><span class="s1">System</span><span class="s2">.</span><span class="s1">currentTimeMillis</span><span class="s2">()</span><span class="s0">}</span><span class="s3">.jpg&quot;</span><span class="s2">)</span>
+    <span class="s1">FileOutputStream</span><span class="s2">(</span><span class="s1">file</span><span class="s2">).</span><span class="s1">use </span><span class="s2">{ </span><span class="s1">out </span><span class="s2">-&gt;</span>
+        <span class="s1">bitmap</span><span class="s2">.</span><span class="s1">compress</span><span class="s2">(</span><span class="s1">Bitmap</span><span class="s2">.</span><span class="s1">CompressFormat</span><span class="s2">.</span><span class="s1">JPEG</span><span class="s2">, </span><span class="s4">90</span><span class="s2">, </span><span class="s1">out</span><span class="s2">)</span>
+    <span class="s2">}</span>
+    <span class="s0">return </span><span class="s1">file</span><span class="s2">.</span><span class="s1">absolutePath</span>
+<span class="s2">}</span>
+
+<span class="s0">fun </span><span class="s1">deletePhotoFile</span><span class="s2">(</span><span class="s1">path: String?</span><span class="s2">) {</span>
+    <span class="s0">if </span><span class="s2">(</span><span class="s1">path</span><span class="s2">.</span><span class="s1">isNullOrBlank</span><span class="s2">()) </span><span class="s0">return</span>
+    <span class="s1">runCatching </span><span class="s2">{</span>
+        <span class="s0">val </span><span class="s1">file </span><span class="s2">= </span><span class="s1">File</span><span class="s2">(</span><span class="s1">path</span><span class="s2">)</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">file</span><span class="s2">.</span><span class="s1">exists</span><span class="s2">()) </span><span class="s1">file</span><span class="s2">.</span><span class="s1">delete</span><span class="s2">()</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+
+<span class="s0">fun </span><span class="s1">getUriFromPath</span><span class="s2">(</span><span class="s1">context: Context</span><span class="s2">, </span><span class="s1">path: String</span><span class="s2">)</span><span class="s1">: Uri </span><span class="s2">{</span>
+    <span class="s0">val </span><span class="s1">file </span><span class="s2">= </span><span class="s1">File</span><span class="s2">(</span><span class="s1">path</span><span class="s2">)</span>
+    <span class="s0">return </span><span class="s1">FileProvider</span><span class="s2">.</span><span class="s1">getUriForFile</span><span class="s2">(</span>
+        <span class="s1">context</span><span class="s2">,</span>
+        <span class="s3">&quot;</span><span class="s0">${</span><span class="s1">context</span><span class="s2">.</span><span class="s1">packageName</span><span class="s0">}</span><span class="s3">.fileprovider&quot;</span><span class="s2">,</span>
+        <span class="s1">file</span>
+    <span class="s2">)</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<html>
+<head>
+<title>ColorRepositoryImpl.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ColorRepositoryImpl.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">repository</span>
+
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">local</span><span class="s2">.</span><span class="s1">entities</span><span class="s2">.</span><span class="s1">AppDatabase</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">local</span><span class="s2">.</span><span class="s1">entities</span><span class="s2">.</span><span class="s1">ColorEntity</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">local</span><span class="s2">.</span><span class="s1">entities</span><span class="s2">.</span><span class="s1">PaletteEntity</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">Color</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">Palette</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">repository</span><span class="s2">.</span><span class="s1">ColorRepository</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">utils</span><span class="s2">.</span><span class="s1">ColorConverter</span>
+
+<span class="s0">class </span><span class="s1">ColorRepositoryImpl</span><span class="s2">(</span>
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">database: AppDatabase</span><span class="s2">,</span>
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">colorConverter: ColorConverter</span>
+<span class="s2">) </span><span class="s1">: ColorRepository </span><span class="s2">{</span>
+
+    <span class="s1">override suspend </span><span class="s0">fun </span><span class="s1">saveStandaloneColor</span><span class="s2">(</span><span class="s1">color: Color</span><span class="s2">, </span><span class="s1">photoPath: String</span><span class="s2">)</span><span class="s1">: Long </span><span class="s2">{</span>
+        <span class="s0">val </span><span class="s1">entity </span><span class="s2">= </span><span class="s1">ColorEntity</span><span class="s2">(</span>
+            <span class="s1">hexCode </span><span class="s2">= </span><span class="s1">color</span><span class="s2">.</span><span class="s1">hex</span><span class="s2">,</span>
+            <span class="s1">isStandalone </span><span class="s2">= </span><span class="s0">true</span><span class="s2">,</span>
+            <span class="s1">paletteId </span><span class="s2">= </span><span class="s0">null</span><span class="s2">,</span>
+            <span class="s1">photoPath </span><span class="s2">= </span><span class="s1">photoPath</span>
+        <span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">database</span><span class="s2">.</span><span class="s1">colorDao</span><span class="s2">().</span><span class="s1">insertColor</span><span class="s2">(</span><span class="s1">entity</span><span class="s2">)</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override suspend </span><span class="s0">fun </span><span class="s1">savePalette</span><span class="s2">(</span><span class="s1">palette: Palette</span><span class="s2">)</span><span class="s1">: Long </span><span class="s2">{</span>
+        <span class="s0">val </span><span class="s1">paletteEntity </span><span class="s2">= </span><span class="s1">PaletteEntity</span><span class="s2">(</span>
+            <span class="s1">name </span><span class="s2">= </span><span class="s1">palette</span><span class="s2">.</span><span class="s1">name</span><span class="s2">,</span>
+            <span class="s1">photoPath </span><span class="s2">= </span><span class="s1">palette</span><span class="s2">.</span><span class="s1">photoPath</span>
+        <span class="s2">)</span>
+        <span class="s0">val </span><span class="s1">paletteId </span><span class="s2">= </span><span class="s1">database</span><span class="s2">.</span><span class="s1">paletteDao</span><span class="s2">().</span><span class="s1">insertPalette</span><span class="s2">(</span><span class="s1">paletteEntity</span><span class="s2">)</span>
+
+        <span class="s1">palette</span><span class="s2">.</span><span class="s1">colors</span><span class="s2">.</span><span class="s1">forEach </span><span class="s2">{ </span><span class="s1">color </span><span class="s2">-&gt;</span>
+            <span class="s0">val </span><span class="s1">colorEntity </span><span class="s2">= </span><span class="s1">ColorEntity</span><span class="s2">(</span>
+                <span class="s1">hexCode </span><span class="s2">= </span><span class="s1">color</span><span class="s2">.</span><span class="s1">hex</span><span class="s2">,</span>
+                <span class="s1">paletteId </span><span class="s2">= </span><span class="s1">paletteId</span><span class="s2">,</span>
+                <span class="s1">isStandalone </span><span class="s2">= </span><span class="s0">false</span><span class="s2">,</span>
+                <span class="s1">photoPath </span><span class="s2">= </span><span class="s0">null</span>
+            <span class="s2">)</span>
+            <span class="s1">database</span><span class="s2">.</span><span class="s1">colorDao</span><span class="s2">().</span><span class="s1">insertColor</span><span class="s2">(</span><span class="s1">colorEntity</span><span class="s2">)</span>
+        <span class="s2">}</span>
+
+        <span class="s0">return </span><span class="s1">paletteId</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override suspend </span><span class="s0">fun </span><span class="s1">getStandaloneColors</span><span class="s2">()</span><span class="s1">: List</span><span class="s2">&lt;</span><span class="s1">Color</span><span class="s2">&gt; {</span>
+        <span class="s0">return </span><span class="s1">database</span><span class="s2">.</span><span class="s1">colorDao</span><span class="s2">().</span><span class="s1">getStandaloneColors</span><span class="s2">().</span><span class="s1">map</span><span class="s2">(</span><span class="s1">::toDomainColor</span><span class="s2">)</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override suspend </span><span class="s0">fun </span><span class="s1">getAllPalettes</span><span class="s2">()</span><span class="s1">: List</span><span class="s2">&lt;</span><span class="s1">Palette</span><span class="s2">&gt; {</span>
+        <span class="s0">return </span><span class="s1">database</span><span class="s2">.</span><span class="s1">paletteDao</span><span class="s2">().</span><span class="s1">getAllPalettesWithColors</span><span class="s2">().</span><span class="s1">map </span><span class="s2">{ </span><span class="s1">pwc </span><span class="s2">-&gt;</span>
+            <span class="s1">Palette</span><span class="s2">(</span>
+                <span class="s1">id </span><span class="s2">= </span><span class="s1">pwc</span><span class="s2">.</span><span class="s1">palette</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+                <span class="s1">name </span><span class="s2">= </span><span class="s1">pwc</span><span class="s2">.</span><span class="s1">palette</span><span class="s2">.</span><span class="s1">name</span><span class="s2">,</span>
+                <span class="s1">colors </span><span class="s2">= </span><span class="s1">pwc</span><span class="s2">.</span><span class="s1">colors</span><span class="s2">.</span><span class="s1">map</span><span class="s2">(</span><span class="s1">::toDomainColor</span><span class="s2">),</span>
+                <span class="s1">photoPath </span><span class="s2">= </span><span class="s1">pwc</span><span class="s2">.</span><span class="s1">palette</span><span class="s2">.</span><span class="s1">photoPath</span>
+            <span class="s2">)</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override suspend </span><span class="s0">fun </span><span class="s1">deleteStandaloneColor</span><span class="s2">(</span><span class="s1">colorId: Long</span><span class="s2">) {</span>
+        <span class="s1">database</span><span class="s2">.</span><span class="s1">colorDao</span><span class="s2">().</span><span class="s1">deleteStandaloneColorById</span><span class="s2">(</span><span class="s1">colorId</span><span class="s2">)</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override suspend </span><span class="s0">fun </span><span class="s1">deletePalette</span><span class="s2">(</span><span class="s1">paletteId: Long</span><span class="s2">) {</span>
+        <span class="s0">val </span><span class="s1">palette </span><span class="s2">= </span><span class="s1">database</span><span class="s2">.</span><span class="s1">paletteDao</span><span class="s2">().</span><span class="s1">getPaletteById</span><span class="s2">(</span><span class="s1">paletteId</span><span class="s2">)</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">palette </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">database</span><span class="s2">.</span><span class="s1">colorDao</span><span class="s2">().</span><span class="s1">deleteColorsByPaletteId</span><span class="s2">(</span><span class="s1">paletteId</span><span class="s2">)</span>
+            <span class="s1">database</span><span class="s2">.</span><span class="s1">paletteDao</span><span class="s2">().</span><span class="s1">deletePalette</span><span class="s2">(</span><span class="s1">palette</span><span class="s2">)</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">toDomainColor</span><span class="s2">(</span><span class="s1">entity: ColorEntity</span><span class="s2">)</span><span class="s1">: Color </span><span class="s2">{</span>
+        <span class="s0">val </span><span class="s1">rgb </span><span class="s2">= </span><span class="s1">colorConverter</span><span class="s2">.</span><span class="s1">hexToRgb</span><span class="s2">(</span><span class="s1">entity</span><span class="s2">.</span><span class="s1">hexCode</span><span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">Color</span><span class="s2">(</span>
+            <span class="s1">id </span><span class="s2">= </span><span class="s1">entity</span><span class="s2">.</span><span class="s1">id</span><span class="s2">,</span>
+            <span class="s1">hex </span><span class="s2">= </span><span class="s1">entity</span><span class="s2">.</span><span class="s1">hexCode</span><span class="s2">,</span>
+            <span class="s1">rgb </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">,</span>
+            <span class="s1">cmyk </span><span class="s2">= </span><span class="s1">colorConverter</span><span class="s2">.</span><span class="s1">rgbToCmyk</span><span class="s2">(</span><span class="s1">rgb</span><span class="s2">),</span>
+            <span class="s1">hsl </span><span class="s2">= </span><span class="s1">colorConverter</span><span class="s2">.</span><span class="s1">rgbToHsl</span><span class="s2">(</span><span class="s1">rgb</span><span class="s2">),</span>
+            <span class="s1">photoPath </span><span class="s2">= </span><span class="s1">entity</span><span class="s2">.</span><span class="s1">photoPath</span>
+        <span class="s2">)</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

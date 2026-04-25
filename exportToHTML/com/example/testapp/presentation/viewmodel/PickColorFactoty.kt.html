@@ -1,0 +1,37 @@
+<html>
+<head>
+<title>PickColorFactoty.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PickColorFactoty.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">presentation</span><span class="s2">.</span><span class="s1">viewmodel</span>
+
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">lifecycle</span><span class="s2">.</span><span class="s1">ViewModel</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">lifecycle</span><span class="s2">.</span><span class="s1">ViewModelProvider</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">usecases</span><span class="s2">.</span><span class="s1">AddColorUseCase</span>
+
+<span class="s0">class </span><span class="s1">PickColorFactoty</span><span class="s2">(</span>
+    <span class="s1">private </span><span class="s0">val </span><span class="s1">addColorUseCase: AddColorUseCase</span>
+<span class="s2">) </span><span class="s1">: ViewModelProvider</span><span class="s2">.</span><span class="s1">Factory </span><span class="s2">{</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s2">&lt;</span><span class="s1">T : ViewModel</span><span class="s2">&gt; </span><span class="s1">create</span><span class="s2">(</span><span class="s1">modelClass: Class</span><span class="s2">&lt;</span><span class="s1">T</span><span class="s2">&gt;)</span><span class="s1">: T </span><span class="s2">{</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">modelClass</span><span class="s2">.</span><span class="s1">isAssignableFrom</span><span class="s2">(</span><span class="s1">PickColorViewModel::</span><span class="s0">class</span><span class="s2">.</span><span class="s1">java</span><span class="s2">)) {</span>
+            <span class="s1">@Suppress</span><span class="s2">(</span><span class="s3">&quot;UNCHECKED_CAST&quot;</span><span class="s2">)</span>
+            <span class="s0">return </span><span class="s1">PickColorViewModel</span><span class="s2">(</span><span class="s1">addColorUseCase</span><span class="s2">) </span><span class="s0">as </span><span class="s1">T</span>
+        <span class="s2">}</span>
+        <span class="s0">throw </span><span class="s1">IllegalArgumentException</span><span class="s2">(</span><span class="s3">&quot;Unknown ViewModel class&quot;</span><span class="s2">)</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

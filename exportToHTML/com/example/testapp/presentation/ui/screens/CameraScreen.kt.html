@@ -1,0 +1,245 @@
+<html>
+<head>
+<title>CameraScreen.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+.s5 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+CameraScreen.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">presentation</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">screens</span>
+
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">Context</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">graphics</span><span class="s2">.</span><span class="s1">Bitmap</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">graphics</span><span class="s2">.</span><span class="s1">BitmapFactory</span>
+<span class="s1">import android</span><span class="s2">.</span><span class="s1">graphics</span><span class="s2">.</span><span class="s1">Matrix</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">CameraSelector</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">ImageCapture</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">ImageCaptureException</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">ImageProxy</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">Preview</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">internal</span><span class="s2">.</span><span class="s1">utils</span><span class="s2">.</span><span class="s1">ImageUtil</span><span class="s2">.</span><span class="s1">rotateBitmap</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">lifecycle</span><span class="s2">.</span><span class="s1">ProcessCameraProvider</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">camera</span><span class="s2">.</span><span class="s1">view</span><span class="s2">.</span><span class="s1">PreviewView</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">Image</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">Arrangement</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">Box</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">Column</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">Row</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">fillMaxSize</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">padding</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">height</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">Spacer</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">fillMaxWidth</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">width</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">foundation</span><span class="s2">.</span><span class="s1">shape</span><span class="s2">.</span><span class="s1">RoundedCornerShape</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">material3</span><span class="s2">.</span><span class="s1">AlertDialog</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">material3</span><span class="s2">.</span><span class="s1">Button</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">material3</span><span class="s2">.</span><span class="s1">Text</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">runtime</span><span class="s2">.</span><span class="s1">Composable</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">runtime</span><span class="s2">.</span><span class="s1">DisposableEffect</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">runtime</span><span class="s2">.</span><span class="s1">getValue</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">runtime</span><span class="s2">.</span><span class="s1">mutableStateOf</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">runtime</span><span class="s2">.</span><span class="s1">remember</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">runtime</span><span class="s2">.</span><span class="s1">setValue</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">Alignment</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">Modifier</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">draw</span><span class="s2">.</span><span class="s1">clip</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">graphics</span><span class="s2">.</span><span class="s1">asImageBitmap</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">layout</span><span class="s2">.</span><span class="s1">ContentScale</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">platform</span><span class="s2">.</span><span class="s1">LocalContext</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">platform</span><span class="s2">.</span><span class="s1">LocalLifecycleOwner</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">unit</span><span class="s2">.</span><span class="s1">dp</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">compose</span><span class="s2">.</span><span class="s1">ui</span><span class="s2">.</span><span class="s1">viewinterop</span><span class="s2">.</span><span class="s1">AndroidView</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">core</span><span class="s2">.</span><span class="s1">content</span><span class="s2">.</span><span class="s1">ContextCompat</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">navigation</span><span class="s2">.</span><span class="s1">NavController</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">presentation</span><span class="s2">.</span><span class="s1">Screen</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">utils</span><span class="s2">.</span><span class="s1">deletePhotoFile</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">utils</span><span class="s2">.</span><span class="s1">saveBitmapToFile</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">accompanist</span><span class="s2">.</span><span class="s1">permissions</span><span class="s2">.</span><span class="s1">ExperimentalPermissionsApi</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">accompanist</span><span class="s2">.</span><span class="s1">permissions</span><span class="s2">.</span><span class="s1">isGranted</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">google</span><span class="s2">.</span><span class="s1">accompanist</span><span class="s2">.</span><span class="s1">permissions</span><span class="s2">.</span><span class="s1">rememberPermissionState</span>
+<span class="s1">import org</span><span class="s2">.</span><span class="s1">checkerframework</span><span class="s2">.</span><span class="s1">checker</span><span class="s2">.</span><span class="s1">units</span><span class="s2">.</span><span class="s1">qual</span><span class="s2">.</span><span class="s1">degrees</span>
+<span class="s1">import java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">concurrent</span><span class="s2">.</span><span class="s1">Executors</span>
+
+<span class="s1">@OptIn</span><span class="s2">(</span><span class="s1">ExperimentalPermissionsApi::</span><span class="s0">class</span><span class="s2">)</span>
+<span class="s1">@Composable</span>
+<span class="s0">fun </span><span class="s1">CameraScreen</span><span class="s2">(</span>
+    <span class="s1">navController: NavController</span><span class="s2">,</span>
+    <span class="s1">mode: String</span>
+<span class="s2">) {</span>
+    <span class="s0">val </span><span class="s1">cameraPermissionState </span><span class="s2">= </span><span class="s1">rememberPermissionState</span><span class="s2">(</span><span class="s1">android</span><span class="s2">.</span><span class="s1">Manifest</span><span class="s2">.</span><span class="s1">permission</span><span class="s2">.</span><span class="s1">CAMERA</span><span class="s2">)</span>
+
+    <span class="s0">var </span><span class="s1">capturedBitmap by remember </span><span class="s2">{ </span><span class="s1">mutableStateOf</span><span class="s2">&lt;</span><span class="s1">Bitmap?</span><span class="s2">&gt;(</span><span class="s0">null</span><span class="s2">) }</span>
+    <span class="s0">var </span><span class="s1">photoPath by remember </span><span class="s2">{ </span><span class="s1">mutableStateOf</span><span class="s2">&lt;</span><span class="s1">String?</span><span class="s2">&gt;(</span><span class="s0">null</span><span class="s2">) }</span>
+
+    <span class="s0">fun </span><span class="s1">resetCaptureAndDelete</span><span class="s2">() {</span>
+        <span class="s1">deletePhotoFile</span><span class="s2">(</span><span class="s1">photoPath</span><span class="s2">)</span>
+        <span class="s1">capturedBitmap </span><span class="s2">= </span><span class="s0">null</span>
+        <span class="s1">photoPath </span><span class="s2">= </span><span class="s0">null</span>
+    <span class="s2">}</span>
+
+    <span class="s0">if </span><span class="s2">(!</span><span class="s1">cameraPermissionState</span><span class="s2">.</span><span class="s1">status</span><span class="s2">.</span><span class="s1">isGranted</span><span class="s2">) {</span>
+        <span class="s1">Box</span><span class="s2">(</span>
+            <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">fillMaxSize</span><span class="s2">(),</span>
+            <span class="s1">contentAlignment </span><span class="s2">= </span><span class="s1">Alignment</span><span class="s2">.</span><span class="s1">Center</span>
+        <span class="s2">) {</span>
+            <span class="s1">Column</span><span class="s2">(</span>
+                <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">padding</span><span class="s2">(</span><span class="s3">24</span><span class="s2">.</span><span class="s1">dp</span><span class="s2">),</span>
+                <span class="s1">horizontalAlignment </span><span class="s2">= </span><span class="s1">Alignment</span><span class="s2">.</span><span class="s1">CenterHorizontally</span><span class="s2">,</span>
+                <span class="s1">verticalArrangement </span><span class="s2">= </span><span class="s1">Arrangement</span><span class="s2">.</span><span class="s1">Center</span>
+            <span class="s2">) {</span>
+                <span class="s1">Text</span><span class="s2">(</span><span class="s4">&quot;Для работы этого экрана нужен доступ к камере.&quot;</span><span class="s2">)</span>
+                <span class="s1">Spacer</span><span class="s2">(</span><span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">height</span><span class="s2">(</span><span class="s3">16</span><span class="s2">.</span><span class="s1">dp</span><span class="s2">))</span>
+                <span class="s1">Button</span><span class="s2">(</span><span class="s1">onClick </span><span class="s2">= { </span><span class="s1">cameraPermissionState</span><span class="s2">.</span><span class="s1">launchPermissionRequest</span><span class="s2">() }) {</span>
+                    <span class="s1">Text</span><span class="s2">(</span><span class="s4">&quot;Разрешить доступ к камере&quot;</span><span class="s2">)</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+        <span class="s0">return</span>
+    <span class="s2">}</span>
+
+    <span class="s0">if </span><span class="s2">(</span><span class="s1">capturedBitmap </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+        <span class="s5">// Режим видоискателя камеры</span>
+        <span class="s1">CameraCaptureView </span><span class="s2">{ </span><span class="s1">bitmap</span><span class="s2">, </span><span class="s1">path </span><span class="s2">-&gt;</span>
+            <span class="s1">capturedBitmap </span><span class="s2">= </span><span class="s1">bitmap</span>
+            <span class="s1">photoPath </span><span class="s2">= </span><span class="s1">path</span>
+        <span class="s2">}</span>
+    <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+        <span class="s5">// Режим превью сделанного снимка</span>
+        <span class="s1">Box</span><span class="s2">(</span><span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">fillMaxSize</span><span class="s2">()) {</span>
+            <span class="s1">Column</span><span class="s2">(</span>
+                <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span>
+                    <span class="s2">.</span><span class="s1">fillMaxSize</span><span class="s2">(),</span>
+                <span class="s1">horizontalAlignment </span><span class="s2">= </span><span class="s1">Alignment</span><span class="s2">.</span><span class="s1">CenterHorizontally</span>
+            <span class="s2">) {</span>
+                <span class="s1">Image</span><span class="s2">(</span>
+                    <span class="s1">bitmap </span><span class="s2">= </span><span class="s1">capturedBitmap</span><span class="s2">!!.</span><span class="s1">asImageBitmap</span><span class="s2">(),</span>
+                    <span class="s1">contentDescription </span><span class="s2">= </span><span class="s4">&quot;Сделанное фото&quot;</span><span class="s2">,</span>
+                    <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span>
+                        <span class="s2">.</span><span class="s1">weight</span><span class="s2">(</span><span class="s3">1f</span><span class="s2">)</span>
+                        <span class="s2">.</span><span class="s1">fillMaxWidth</span><span class="s2">()</span>
+                        <span class="s2">.</span><span class="s1">clip</span><span class="s2">(</span><span class="s1">RoundedCornerShape</span><span class="s2">(</span><span class="s3">8</span><span class="s2">.</span><span class="s1">dp</span><span class="s2">)),</span>
+                    <span class="s1">contentScale </span><span class="s2">= </span><span class="s1">ContentScale</span><span class="s2">.</span><span class="s1">Fit</span>
+                <span class="s2">)</span>
+
+                <span class="s1">Spacer</span><span class="s2">(</span><span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">height</span><span class="s2">(</span><span class="s3">16</span><span class="s2">.</span><span class="s1">dp</span><span class="s2">))</span>
+
+                <span class="s1">Row</span><span class="s2">(</span>
+                    <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">fillMaxWidth</span><span class="s2">(),</span>
+                    <span class="s1">horizontalArrangement </span><span class="s2">= </span><span class="s1">Arrangement</span><span class="s2">.</span><span class="s1">SpaceEvenly</span>
+                <span class="s2">) {</span>
+                    <span class="s1">Button</span><span class="s2">(</span>
+                        <span class="s1">onClick </span><span class="s2">= {</span>
+                            <span class="s0">val </span><span class="s1">path </span><span class="s2">= </span><span class="s1">photoPath ?: </span><span class="s0">return</span><span class="s1">@Button</span>
+                            <span class="s0">if </span><span class="s2">(</span><span class="s1">mode </span><span class="s2">== </span><span class="s4">&quot;color&quot;</span><span class="s2">) {</span>
+                                <span class="s1">navController</span><span class="s2">.</span><span class="s1">navigate</span><span class="s2">(</span><span class="s1">Screen</span><span class="s2">.</span><span class="s1">PickColor</span><span class="s2">.</span><span class="s1">passPath</span><span class="s2">(</span><span class="s1">path</span><span class="s2">))</span>
+                            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                                <span class="s1">navController</span><span class="s2">.</span><span class="s1">navigate</span><span class="s2">(</span><span class="s1">Screen</span><span class="s2">.</span><span class="s1">PickPalette</span><span class="s2">.</span><span class="s1">passPath</span><span class="s2">(</span><span class="s1">path</span><span class="s2">))</span>
+                            <span class="s2">}</span>
+                        <span class="s2">},</span>
+                        <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">weight</span><span class="s2">(</span><span class="s3">1f</span><span class="s2">)</span>
+                    <span class="s2">) {</span>
+                        <span class="s1">Text</span><span class="s2">(</span><span class="s4">&quot;Выбрать&quot;</span><span class="s2">)</span>
+                    <span class="s2">}</span>
+                    <span class="s1">Spacer</span><span class="s2">(</span><span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">width</span><span class="s2">(</span><span class="s3">8</span><span class="s2">.</span><span class="s1">dp</span><span class="s2">))</span>
+                    <span class="s1">Button</span><span class="s2">(</span>
+                        <span class="s1">onClick </span><span class="s2">= { </span><span class="s1">resetCaptureAndDelete</span><span class="s2">() },</span>
+                        <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">weight</span><span class="s2">(</span><span class="s3">1f</span><span class="s2">)</span>
+                    <span class="s2">) {</span>
+                        <span class="s1">Text</span><span class="s2">(</span><span class="s4">&quot;Отменить&quot;</span><span class="s2">)</span>
+                    <span class="s2">}</span>
+                <span class="s2">}</span>
+            <span class="s2">}</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+
+<span class="s1">@Composable</span>
+<span class="s0">fun </span><span class="s1">CameraCaptureView</span><span class="s2">(</span>
+    <span class="s1">onImageCaptured: </span><span class="s2">(</span><span class="s1">Bitmap</span><span class="s2">, </span><span class="s1">String</span><span class="s2">) -&gt; </span><span class="s1">Unit</span>
+<span class="s2">) {</span>
+    <span class="s0">val </span><span class="s1">context </span><span class="s2">= </span><span class="s1">LocalContext</span><span class="s2">.</span><span class="s1">current</span>
+    <span class="s0">val </span><span class="s1">lifecycleOwner </span><span class="s2">= </span><span class="s1">LocalLifecycleOwner</span><span class="s2">.</span><span class="s1">current</span>
+    <span class="s0">val </span><span class="s1">imageCapture </span><span class="s2">= </span><span class="s1">remember </span><span class="s2">{ </span><span class="s1">ImageCapture</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">().</span><span class="s1">build</span><span class="s2">() }</span>
+    <span class="s0">val </span><span class="s1">cameraExecutor </span><span class="s2">= </span><span class="s1">remember </span><span class="s2">{ </span><span class="s1">Executors</span><span class="s2">.</span><span class="s1">newSingleThreadExecutor</span><span class="s2">() }</span>
+
+    <span class="s1">Box</span><span class="s2">(</span><span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">fillMaxSize</span><span class="s2">()) {</span>
+        <span class="s1">AndroidView</span><span class="s2">(</span>
+            <span class="s1">factory </span><span class="s2">= { </span><span class="s1">ctx </span><span class="s2">-&gt;</span>
+                <span class="s1">PreviewView</span><span class="s2">(</span><span class="s1">ctx</span><span class="s2">).</span><span class="s1">apply </span><span class="s2">{</span>
+                    <span class="s0">val </span><span class="s1">cameraProviderFuture </span><span class="s2">= </span><span class="s1">ProcessCameraProvider</span><span class="s2">.</span><span class="s1">getInstance</span><span class="s2">(</span><span class="s1">ctx</span><span class="s2">)</span>
+                    <span class="s1">cameraProviderFuture</span><span class="s2">.</span><span class="s1">addListener</span><span class="s2">({</span>
+                        <span class="s0">val </span><span class="s1">cameraProvider </span><span class="s2">= </span><span class="s1">cameraProviderFuture</span><span class="s2">.</span><span class="s1">get</span><span class="s2">()</span>
+                        <span class="s0">val </span><span class="s1">preview </span><span class="s2">= </span><span class="s1">Preview</span><span class="s2">.</span><span class="s1">Builder</span><span class="s2">().</span><span class="s1">build</span><span class="s2">()</span>
+                        <span class="s1">preview</span><span class="s2">.</span><span class="s1">setSurfaceProvider</span><span class="s2">(</span><span class="s1">surfaceProvider</span><span class="s2">)</span>
+
+                        <span class="s1">cameraProvider</span><span class="s2">.</span><span class="s1">unbindAll</span><span class="s2">()</span>
+                        <span class="s1">cameraProvider</span><span class="s2">.</span><span class="s1">bindToLifecycle</span><span class="s2">(</span>
+                            <span class="s1">lifecycleOwner</span><span class="s2">,</span>
+                            <span class="s1">CameraSelector</span><span class="s2">.</span><span class="s1">DEFAULT_BACK_CAMERA</span><span class="s2">,</span>
+                            <span class="s1">preview</span><span class="s2">,</span>
+                            <span class="s1">imageCapture</span>
+                        <span class="s2">)</span>
+                    <span class="s2">}, </span><span class="s1">ContextCompat</span><span class="s2">.</span><span class="s1">getMainExecutor</span><span class="s2">(</span><span class="s1">ctx</span><span class="s2">))</span>
+                <span class="s2">}</span>
+            <span class="s2">},</span>
+            <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span><span class="s2">.</span><span class="s1">fillMaxSize</span><span class="s2">()</span>
+        <span class="s2">)</span>
+
+        <span class="s1">Button</span><span class="s2">(</span>
+            <span class="s1">onClick </span><span class="s2">= {</span>
+                <span class="s1">imageCapture</span><span class="s2">.</span><span class="s1">takePicture</span><span class="s2">(</span>
+                    <span class="s1">ContextCompat</span><span class="s2">.</span><span class="s1">getMainExecutor</span><span class="s2">(</span><span class="s1">context</span><span class="s2">),</span>
+                    <span class="s0">object </span><span class="s1">: ImageCapture</span><span class="s2">.</span><span class="s1">OnImageCapturedCallback</span><span class="s2">() {</span>
+                        <span class="s1">override </span><span class="s0">fun </span><span class="s1">onCaptureSuccess</span><span class="s2">(</span><span class="s1">image: ImageProxy</span><span class="s2">) {</span>
+                            <span class="s0">val </span><span class="s1">bitmap </span><span class="s2">= </span><span class="s1">imageProxyToBitmap</span><span class="s2">(</span><span class="s1">image</span><span class="s2">)</span>
+                            <span class="s0">val </span><span class="s1">path </span><span class="s2">= </span><span class="s1">saveBitmapToFile</span><span class="s2">(</span><span class="s1">context</span><span class="s2">, </span><span class="s1">bitmap</span><span class="s2">)</span>
+                            <span class="s1">onImageCaptured</span><span class="s2">(</span><span class="s1">bitmap</span><span class="s2">, </span><span class="s1">path</span><span class="s2">)</span>
+                            <span class="s1">image</span><span class="s2">.</span><span class="s1">close</span><span class="s2">()</span>
+                        <span class="s2">}</span>
+
+                        <span class="s1">override </span><span class="s0">fun </span><span class="s1">onError</span><span class="s2">(</span><span class="s1">exception: ImageCaptureException</span><span class="s2">) {</span>
+                            <span class="s1">exception</span><span class="s2">.</span><span class="s1">printStackTrace</span><span class="s2">()</span>
+                        <span class="s2">}</span>
+                    <span class="s2">}</span>
+                <span class="s2">)</span>
+            <span class="s2">},</span>
+            <span class="s1">modifier </span><span class="s2">= </span><span class="s1">Modifier</span>
+                <span class="s2">.</span><span class="s1">align</span><span class="s2">(</span><span class="s1">Alignment</span><span class="s2">.</span><span class="s1">BottomCenter</span><span class="s2">)</span>
+                <span class="s2">.</span><span class="s1">padding</span><span class="s2">(</span><span class="s3">16</span><span class="s2">.</span><span class="s1">dp</span><span class="s2">)</span>
+        <span class="s2">) {</span>
+            <span class="s1">Text</span><span class="s2">(</span><span class="s4">&quot;Сделать фото&quot;</span><span class="s2">)</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+
+    <span class="s1">DisposableEffect</span><span class="s2">(</span><span class="s1">Unit</span><span class="s2">) {</span>
+        <span class="s1">onDispose </span><span class="s2">{</span>
+            <span class="s1">cameraExecutor</span><span class="s2">.</span><span class="s1">shutdown</span><span class="s2">()</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+
+<span class="s0">fun </span><span class="s1">imageProxyToBitmap</span><span class="s2">(</span><span class="s1">image: ImageProxy</span><span class="s2">)</span><span class="s1">: Bitmap </span><span class="s2">{</span>
+    <span class="s0">val </span><span class="s1">buffer </span><span class="s2">= </span><span class="s1">image</span><span class="s2">.</span><span class="s1">planes</span><span class="s2">[</span><span class="s3">0</span><span class="s2">].</span><span class="s1">buffer</span>
+    <span class="s0">val </span><span class="s1">bytes </span><span class="s2">= </span><span class="s1">ByteArray</span><span class="s2">(</span><span class="s1">buffer</span><span class="s2">.</span><span class="s1">remaining</span><span class="s2">())</span>
+    <span class="s1">buffer</span><span class="s2">.</span><span class="s1">get</span><span class="s2">(</span><span class="s1">bytes</span><span class="s2">)</span>
+    <span class="s0">val </span><span class="s1">rawBitmap </span><span class="s2">= </span><span class="s1">BitmapFactory</span><span class="s2">.</span><span class="s1">decodeByteArray</span><span class="s2">(</span><span class="s1">bytes</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">bytes</span><span class="s2">.</span><span class="s1">size</span><span class="s2">)</span>
+    <span class="s0">val </span><span class="s1">rotationDegrees </span><span class="s2">= </span><span class="s1">image</span><span class="s2">.</span><span class="s1">imageInfo</span><span class="s2">.</span><span class="s1">rotationDegrees</span>
+    <span class="s0">return </span><span class="s1">rotateBitmap</span><span class="s2">(</span><span class="s1">rawBitmap</span><span class="s2">, </span><span class="s1">rotationDegrees</span><span class="s2">)</span>
+
+    <span class="s0">return </span><span class="s1">BitmapFactory</span><span class="s2">.</span><span class="s1">decodeByteArray</span><span class="s2">(</span><span class="s1">bytes</span><span class="s2">, </span><span class="s3">0</span><span class="s2">, </span><span class="s1">bytes</span><span class="s2">.</span><span class="s1">size</span><span class="s2">)</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<html>
+<head>
+<title>ColorConventer.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+.s4 { color: #2aacb8;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ColorConventer.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">utils</span>
+
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">domain</span><span class="s2">.</span><span class="s1">model</span><span class="s2">.</span><span class="s1">Color</span>
+<span class="s1">import kotlin</span><span class="s2">.</span><span class="s1">math</span><span class="s2">.</span><span class="s1">abs</span>
+
+<span class="s0">interface </span><span class="s1">ColorConverter </span><span class="s2">{</span>
+    <span class="s0">fun </span><span class="s1">hexToRgb</span><span class="s2">(</span><span class="s1">hex: String</span><span class="s2">)</span><span class="s1">: Triple</span><span class="s2">&lt;</span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">&gt;</span>
+    <span class="s0">fun </span><span class="s1">rgbToCmyk</span><span class="s2">(</span><span class="s1">rgb: Triple</span><span class="s2">&lt;</span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">&gt;)</span><span class="s1">: Color</span><span class="s2">.</span><span class="s1">CMYK</span>
+    <span class="s0">fun </span><span class="s1">rgbToHsl</span><span class="s2">(</span><span class="s1">rgb: Triple</span><span class="s2">&lt;</span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">&gt;)</span><span class="s1">: Color</span><span class="s2">.</span><span class="s1">HSL</span>
+<span class="s2">}</span>
+
+<span class="s0">class </span><span class="s1">ColorConverterImpl : ColorConverter </span><span class="s2">{</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">hexToRgb</span><span class="s2">(</span><span class="s1">hex: String</span><span class="s2">)</span><span class="s1">: Triple</span><span class="s2">&lt;</span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">&gt; {</span>
+        <span class="s0">val </span><span class="s1">clean </span><span class="s2">= </span><span class="s1">hex</span><span class="s2">.</span><span class="s1">removePrefix</span><span class="s2">(</span><span class="s3">&quot;#&quot;</span><span class="s2">)</span>
+        <span class="s0">val </span><span class="s1">intValue </span><span class="s2">= </span><span class="s1">clean</span><span class="s2">.</span><span class="s1">toLong</span><span class="s2">(</span><span class="s4">16</span><span class="s2">)</span>
+        <span class="s0">return </span><span class="s1">Triple</span><span class="s2">(</span>
+            <span class="s2">((</span><span class="s1">intValue shr </span><span class="s4">16</span><span class="s2">) </span><span class="s1">and </span><span class="s4">0xFF</span><span class="s2">).</span><span class="s1">toInt</span><span class="s2">(),</span>
+            <span class="s2">((</span><span class="s1">intValue shr </span><span class="s4">8</span><span class="s2">) </span><span class="s1">and </span><span class="s4">0xFF</span><span class="s2">).</span><span class="s1">toInt</span><span class="s2">(),</span>
+            <span class="s2">(</span><span class="s1">intValue and </span><span class="s4">0xFF</span><span class="s2">).</span><span class="s1">toInt</span><span class="s2">()</span>
+        <span class="s2">)</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">rgbToCmyk</span><span class="s2">(</span><span class="s1">rgb: Triple</span><span class="s2">&lt;</span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">&gt;)</span><span class="s1">: Color</span><span class="s2">.</span><span class="s1">CMYK </span><span class="s2">{</span>
+        <span class="s0">val </span><span class="s1">r </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">.</span><span class="s1">first </span><span class="s2">/ </span><span class="s4">255.0</span>
+        <span class="s0">val </span><span class="s1">g </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">.</span><span class="s1">second </span><span class="s2">/ </span><span class="s4">255.0</span>
+        <span class="s0">val </span><span class="s1">b </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">.</span><span class="s1">third </span><span class="s2">/ </span><span class="s4">255.0</span>
+
+        <span class="s0">val </span><span class="s1">k </span><span class="s2">= </span><span class="s4">1 </span><span class="s2">- </span><span class="s1">maxOf</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">g</span><span class="s2">, </span><span class="s1">b</span><span class="s2">)</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">k </span><span class="s2">== </span><span class="s4">1.0</span><span class="s2">) </span><span class="s0">return </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">CMYK</span><span class="s2">(</span><span class="s4">0.0</span><span class="s2">, </span><span class="s4">0.0</span><span class="s2">, </span><span class="s4">0.0</span><span class="s2">, </span><span class="s4">1.0</span><span class="s2">)</span>
+
+        <span class="s0">val </span><span class="s1">c </span><span class="s2">= (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">r </span><span class="s2">- </span><span class="s1">k</span><span class="s2">) / (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">k</span><span class="s2">)</span>
+        <span class="s0">val </span><span class="s1">m </span><span class="s2">= (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">g </span><span class="s2">- </span><span class="s1">k</span><span class="s2">) / (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">k</span><span class="s2">)</span>
+        <span class="s0">val </span><span class="s1">y </span><span class="s2">= (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">b </span><span class="s2">- </span><span class="s1">k</span><span class="s2">) / (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">k</span><span class="s2">)</span>
+
+        <span class="s0">return </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">CMYK</span><span class="s2">(</span><span class="s1">c</span><span class="s2">, </span><span class="s1">m</span><span class="s2">, </span><span class="s1">y</span><span class="s2">, </span><span class="s1">k</span><span class="s2">)</span>
+    <span class="s2">}</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">rgbToHsl</span><span class="s2">(</span><span class="s1">rgb: Triple</span><span class="s2">&lt;</span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">, </span><span class="s1">Int</span><span class="s2">&gt;)</span><span class="s1">: Color</span><span class="s2">.</span><span class="s1">HSL </span><span class="s2">{</span>
+        <span class="s0">val </span><span class="s1">r </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">.</span><span class="s1">first </span><span class="s2">/ </span><span class="s4">255.0</span>
+        <span class="s0">val </span><span class="s1">g </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">.</span><span class="s1">second </span><span class="s2">/ </span><span class="s4">255.0</span>
+        <span class="s0">val </span><span class="s1">b </span><span class="s2">= </span><span class="s1">rgb</span><span class="s2">.</span><span class="s1">third </span><span class="s2">/ </span><span class="s4">255.0</span>
+
+        <span class="s0">val </span><span class="s1">max </span><span class="s2">= </span><span class="s1">maxOf</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">g</span><span class="s2">, </span><span class="s1">b</span><span class="s2">)</span>
+        <span class="s0">val </span><span class="s1">min </span><span class="s2">= </span><span class="s1">minOf</span><span class="s2">(</span><span class="s1">r</span><span class="s2">, </span><span class="s1">g</span><span class="s2">, </span><span class="s1">b</span><span class="s2">)</span>
+        <span class="s0">val </span><span class="s1">delta </span><span class="s2">= </span><span class="s1">max </span><span class="s2">- </span><span class="s1">min</span>
+
+        <span class="s0">val </span><span class="s1">lightness </span><span class="s2">= (</span><span class="s1">max </span><span class="s2">+ </span><span class="s1">min</span><span class="s2">) / </span><span class="s4">2</span>
+        <span class="s0">val </span><span class="s1">saturation </span><span class="s2">= </span><span class="s0">if </span><span class="s2">(</span><span class="s1">delta </span><span class="s2">== </span><span class="s4">0.0</span><span class="s2">) </span><span class="s4">0.0 </span><span class="s0">else </span><span class="s1">delta </span><span class="s2">/ (</span><span class="s4">1 </span><span class="s2">- </span><span class="s1">abs</span><span class="s2">(</span><span class="s4">2 </span><span class="s2">* </span><span class="s1">lightness </span><span class="s2">- </span><span class="s4">1</span><span class="s2">))</span>
+
+        <span class="s0">var </span><span class="s1">hue </span><span class="s2">= </span><span class="s0">when </span><span class="s2">{</span>
+            <span class="s1">delta </span><span class="s2">== </span><span class="s4">0.0 </span><span class="s2">-&gt; </span><span class="s4">0.0</span>
+            <span class="s1">max </span><span class="s2">== </span><span class="s1">r </span><span class="s2">-&gt; </span><span class="s4">60 </span><span class="s2">* (((</span><span class="s1">g </span><span class="s2">- </span><span class="s1">b</span><span class="s2">) / </span><span class="s1">delta</span><span class="s2">) % </span><span class="s4">6</span><span class="s2">)</span>
+            <span class="s1">max </span><span class="s2">== </span><span class="s1">g </span><span class="s2">-&gt; </span><span class="s4">60 </span><span class="s2">* (((</span><span class="s1">b </span><span class="s2">- </span><span class="s1">r</span><span class="s2">) / </span><span class="s1">delta</span><span class="s2">) + </span><span class="s4">2</span><span class="s2">)</span>
+            <span class="s0">else </span><span class="s2">-&gt; </span><span class="s4">60 </span><span class="s2">* (((</span><span class="s1">r </span><span class="s2">- </span><span class="s1">g</span><span class="s2">) / </span><span class="s1">delta</span><span class="s2">) + </span><span class="s4">4</span><span class="s2">)</span>
+        <span class="s2">}</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">hue </span><span class="s2">&lt; </span><span class="s4">0</span><span class="s2">) </span><span class="s1">hue </span><span class="s2">+= </span><span class="s4">360.0</span>
+
+        <span class="s0">return </span><span class="s1">Color</span><span class="s2">.</span><span class="s1">HSL</span><span class="s2">(</span><span class="s1">hue</span><span class="s2">, </span><span class="s1">saturation</span><span class="s2">, </span><span class="s1">lightness</span><span class="s2">)</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>

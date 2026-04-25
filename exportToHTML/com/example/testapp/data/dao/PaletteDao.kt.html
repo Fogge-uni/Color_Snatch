@@ -1,0 +1,48 @@
+<html>
+<head>
+<title>PaletteDao.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+PaletteDao.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">dao</span>
+
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">room</span><span class="s2">.</span><span class="s1">Dao</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">room</span><span class="s2">.</span><span class="s1">Delete</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">room</span><span class="s2">.</span><span class="s1">Insert</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">room</span><span class="s2">.</span><span class="s1">Query</span>
+<span class="s1">import androidx</span><span class="s2">.</span><span class="s1">room</span><span class="s2">.</span><span class="s1">Transaction</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">local</span><span class="s2">.</span><span class="s1">entities</span><span class="s2">.</span><span class="s1">PaletteEntity</span>
+<span class="s1">import com</span><span class="s2">.</span><span class="s1">example</span><span class="s2">.</span><span class="s1">testapp</span><span class="s2">.</span><span class="s1">data</span><span class="s2">.</span><span class="s1">local</span><span class="s2">.</span><span class="s1">entities</span><span class="s2">.</span><span class="s1">PaletteWithColors</span>
+
+<span class="s1">@Dao</span>
+<span class="s0">interface </span><span class="s1">PaletteDao </span><span class="s2">{</span>
+
+    <span class="s1">@Insert</span>
+    <span class="s1">suspend </span><span class="s0">fun </span><span class="s1">insertPalette</span><span class="s2">(</span><span class="s1">palette: PaletteEntity</span><span class="s2">)</span><span class="s1">: Long</span>
+
+    <span class="s1">@Query</span><span class="s2">(</span><span class="s3">&quot;SELECT * FROM palettes ORDER BY id DESC&quot;</span><span class="s2">)</span>
+    <span class="s1">suspend </span><span class="s0">fun </span><span class="s1">getAllPalettes</span><span class="s2">()</span><span class="s1">: List</span><span class="s2">&lt;</span><span class="s1">PaletteEntity</span><span class="s2">&gt;</span>
+
+    <span class="s1">@Transaction</span>
+    <span class="s1">@Query</span><span class="s2">(</span><span class="s3">&quot;SELECT * FROM palettes ORDER BY id DESC&quot;</span><span class="s2">)</span>
+    <span class="s1">suspend </span><span class="s0">fun </span><span class="s1">getAllPalettesWithColors</span><span class="s2">()</span><span class="s1">: List</span><span class="s2">&lt;</span><span class="s1">PaletteWithColors</span><span class="s2">&gt;</span>
+
+    <span class="s1">@Delete</span>
+    <span class="s1">suspend </span><span class="s0">fun </span><span class="s1">deletePalette</span><span class="s2">(</span><span class="s1">palette: PaletteEntity</span><span class="s2">)</span>
+
+    <span class="s1">@Query</span><span class="s2">(</span><span class="s3">&quot;SELECT * FROM palettes WHERE id = :paletteId LIMIT 1&quot;</span><span class="s2">)</span>
+    <span class="s1">suspend </span><span class="s0">fun </span><span class="s1">getPaletteById</span><span class="s2">(</span><span class="s1">paletteId: Long</span><span class="s2">)</span><span class="s1">: PaletteEntity?</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
