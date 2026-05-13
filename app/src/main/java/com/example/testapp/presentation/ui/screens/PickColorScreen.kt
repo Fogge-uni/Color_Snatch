@@ -1,5 +1,6 @@
 package com.example.testapp.presentation.ui.screens
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -17,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
@@ -54,7 +54,6 @@ fun PickColorScreen(
     val controller = rememberColorPickerController()
 
     var selectedHex by remember { mutableStateOf<String?>(null) }
-    var selectedColor by remember { mutableStateOf(Color.Transparent) }
     var colorCodes by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
 
     LaunchedEffect(bitmap) {
@@ -83,7 +82,6 @@ fun PickColorScreen(
                     paletteContentScale = PaletteContentScale.CROP,
                     paletteImageBitmap = bitmap.asImageBitmap(),
                     onColorChanged = { colorEnvelope: ColorEnvelope ->
-                        selectedColor = colorEnvelope.color
                         val hex = colorEnvelope.hexCode
                         selectedHex = if (hex.startsWith("#")) hex else "#$hex"
                         colorCodes = buildColorCodes(colorEnvelope.color.toArgb())

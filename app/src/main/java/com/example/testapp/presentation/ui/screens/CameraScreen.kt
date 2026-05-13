@@ -11,14 +11,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
@@ -53,15 +47,28 @@ fun CameraScreen(
     var capturedBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var photoPath by remember { mutableStateOf<String?>(null) }
 
+    var cameraProvider by remember { mutableStateOf<ProcessCameraProvider?>(null) }
+    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
+
     fun resetCaptureAndDelete() {
+        cameraProvider?.unbindAll()
         deletePhotoFile(photoPath)
         capturedBitmap = null
         photoPath = null
     }
+
     fun navigateToHome() {
+        cameraProvider?.unbindAll()
         navController.navigate(Screen.Home.route) {
             popUpTo(Screen.Home.route) { inclusive = true }
             launchSingleTop = true
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraProvider?.unbindAll()
+            cameraExecutor.shutdown()
         }
     }
 
@@ -87,10 +94,16 @@ fun CameraScreen(
 
     Box(modifier = Modifier.fillMaxSize()) {
         if (capturedBitmap == null) {
-            CameraCaptureView { bitmap, path ->
-                capturedBitmap = bitmap
-                photoPath = path
-            }
+            CameraCaptureView(
+                onCameraProviderReady = { provider ->
+                    cameraProvider = provider
+                },
+                cameraExecutor = cameraExecutor,
+                onImageCaptured = { bitmap, path ->
+                    capturedBitmap = bitmap
+                    photoPath = path
+                }
+            )
         } else {
             Column(
                 modifier = Modifier.fillMaxSize().background(Color.Black),
@@ -121,6 +134,7 @@ fun CameraScreen(
                     Button(
                         onClick = {
                             val path = photoPath ?: return@Button
+                            cameraProvider?.unbindAll()
                             if (mode == "color") {
                                 navController.navigate(Screen.PickColor.passPath(path))
                             } else {
@@ -149,6 +163,7 @@ fun CameraScreen(
                 }
             }
         }
+
         IconButton(
             onClick = { navigateToHome() },
             modifier = Modifier
@@ -157,7 +172,7 @@ fun CameraScreen(
                 .padding(16.dp)
         ) {
             Icon(
-                imageVector = Icons.Default.ArrowBack,
+                imageVector = Icons.AutoMirrored.Default.ArrowBack,
                 contentDescription = "Back to home",
                 tint = Color.White
             )
@@ -167,12 +182,13 @@ fun CameraScreen(
 
 @Composable
 fun CameraCaptureView(
+    onCameraProviderReady: (ProcessCameraProvider) -> Unit,
+    cameraExecutor: java.util.concurrent.ExecutorService,
     onImageCaptured: (Bitmap, String) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val imageCapture = remember { ImageCapture.Builder().build() }
-    val cameraExecutor = remember { Executors.newSingleThreadExecutor() }
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
         AndroidView(
@@ -183,13 +199,20 @@ fun CameraCaptureView(
                     val cameraProviderFuture = ProcessCameraProvider.getInstance(ctx)
                     cameraProviderFuture.addListener({
                         val cameraProvider = cameraProviderFuture.get()
-                        val preview = Preview.Builder().build()
-                        preview.setSurfaceProvider(surfaceProvider)
+                        onCameraProviderReady(cameraProvider)
 
-                        cameraProvider.unbindAll()
+                        val preview = Preview.Builder().build()
+                        preview.surfaceProvider = surfaceProvider
+
+                        val cameraSelector = if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) {
+                            CameraSelector.DEFAULT_BACK_CAMERA
+                        } else {
+                            CameraSelector.DEFAULT_FRONT_CAMERA
+                        }
+
                         cameraProvider.bindToLifecycle(
                             lifecycleOwner,
-                            CameraSelector.DEFAULT_BACK_CAMERA,
+                            cameraSelector,
                             preview,
                             imageCapture
                         )
@@ -202,7 +225,7 @@ fun CameraCaptureView(
         Button(
             onClick = {
                 imageCapture.takePicture(
-                    ContextCompat.getMainExecutor(context),
+                    cameraExecutor,
                     object : ImageCapture.OnImageCapturedCallback() {
                         override fun onCaptureSuccess(image: ImageProxy) {
                             val bitmap = imageProxyToBitmap(image)
@@ -228,12 +251,6 @@ fun CameraCaptureView(
                 .height(56.dp)
         ) {
             Text("Take photo", style = MaterialTheme.typography.titleLarge)
-        }
-    }
-
-    DisposableEffect(Unit) {
-        onDispose {
-            cameraExecutor.shutdown()
         }
     }
 }

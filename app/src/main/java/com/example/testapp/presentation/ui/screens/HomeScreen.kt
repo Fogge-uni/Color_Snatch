@@ -2,14 +2,9 @@ package com.example.testapp.presentation.ui.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -22,21 +17,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.compose.onPrimaryContainerDark
-import com.example.compose.onPrimaryContainerLight
 import com.example.compose.primaryContainerDark
-import com.example.compose.primaryContainerLight
 import com.example.testapp.domain.model.Color
 import com.example.testapp.domain.model.Palette
 import com.example.testapp.presentation.Screen
 import com.example.testapp.presentation.viewmodel.HomeViewModel
 import com.example.testapp.utils.buildColorCodes
 import com.example.testapp.utils.copyToClipboard
-import com.example.testapp.utils.isDarkColor
 import androidx.compose.ui.graphics.Color as ComposeColor
 
 @Composable
@@ -146,7 +138,7 @@ fun ColorCard(
     onClick: () -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-    val colorInt = android.graphics.Color.parseColor(color.hex)
+    val colorInt = color.hex.toColorInt()
 
     Card(
         modifier = Modifier
@@ -293,7 +285,7 @@ fun PaletteCard(
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxSize()
-                            .background(ComposeColor(android.graphics.Color.parseColor(color.hex)))
+                            .background(ComposeColor(color.hex.toColorInt()))
                     )
                 }
             }
@@ -365,7 +357,7 @@ fun PaletteDetailDialog(
                         .heightIn(min = 200.dp, max = 400.dp)
                 ) {
                     items(palette.colors) { color ->
-                        val colorInt = android.graphics.Color.parseColor(color.hex)
+                        val colorInt = color.hex.toColorInt()
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -412,7 +404,7 @@ fun ColorDetailDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
-    val colorInt = android.graphics.Color.parseColor(color.hex)
+    val colorInt = color.hex.toColorInt()
     val colorCodes = remember(colorInt) { buildColorCodes(colorInt) }
 
     AlertDialog(
