@@ -36,7 +36,8 @@ import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.ImageColorPicker
 import com.github.skydoves.colorpicker.compose.PaletteContentScale
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 fun PickColorScreen(
@@ -45,27 +46,50 @@ fun PickColorScreen(
     viewModel: PickColorViewModel
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    val bitmap by remember(photoPath) {
-        mutableStateOf(BitmapFactory.decodeFile(photoPath))
-    }
-
     val controller = rememberColorPickerController()
-
     var selectedHex by remember { mutableStateOf<String?>(null) }
     var colorCodes by remember { mutableStateOf<List<Pair<String, String>>>(emptyList()) }
-
-    LaunchedEffect(bitmap) {
-        bitmap?.let { bmp ->
-            controller.setPaletteImageBitmap(bmp.asImageBitmap())
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    LaunchedEffect(photoPath) {
+        bitmap = withContext(Dispatchers.IO) {
+            BitmapFactory.decodeFile(photoPath)
+        }
+    }
+    DisposableEffect(photoPath) {
+        onDispose {
+            deletePhotoFile(photoPath)
+            bitmap?.recycle()
         }
     }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            deletePhotoFile(photoPath)
+    val saved by viewModel.saved.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(saved) {
+        if (saved) {
+            navController.navigate(Screen.Home.route) {
+                popUpTo(Screen.Home.route) { inclusive = true }
+                launchSingleTop = true
+            }
         }
+    }
+
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
+    }
+
+    LaunchedEffect(bitmap) {
+        bitmap?.let { bmp -> controller.setPaletteImageBitmap(bmp.asImageBitmap()) }
+    }
+
+    if (bitmap == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            androidx.compose.material3.CircularProgressIndicator()
+        }
+        return
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -80,7 +104,7 @@ fun PickColorScreen(
                     modifier = Modifier.fillMaxSize(),
                     controller = controller,
                     paletteContentScale = PaletteContentScale.CROP,
-                    paletteImageBitmap = bitmap.asImageBitmap(),
+                    paletteImageBitmap = bitmap!!.asImageBitmap(),
                     onColorChanged = { colorEnvelope: ColorEnvelope ->
                         val hex = colorEnvelope.hexCode
                         selectedHex = if (hex.startsWith("#")) hex else "#$hex"
@@ -107,7 +131,7 @@ fun PickColorScreen(
                     items(colorCodes) { (name, value) ->
                         Row(modifier = Modifier.fillMaxWidth().clickable {
                             copyToClipboard(context, value)
-                            Toast.makeText(context, "Скопировано: $value", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, "Saved!: $value", Toast.LENGTH_SHORT).show()
                         }) {
                             Text(
                                 text = "$name: ",
@@ -121,18 +145,8 @@ fun PickColorScreen(
                     }
                 }
                 Box(modifier = Modifier.fillMaxWidth().height(70.dp), contentAlignment = Alignment.BottomCenter) {
-
                     Button(
-                        onClick = {
-                            val hex = selectedHex ?: return@Button
-                            scope.launch {
-                                viewModel.saveColor(hex, photoPath)
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            }
-                        },
+                        onClick = { viewModel.saveColor(selectedHex!!) },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = primaryContainerDark,
                             contentColor = onPrimaryContainerDark

@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.example.testapp.data.local.entities.PaletteEntity
 import com.example.testapp.data.local.entities.PaletteWithColors
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface PaletteDao {
@@ -19,7 +20,7 @@ interface PaletteDao {
 
     @Transaction
     @Query("SELECT * FROM palettes ORDER BY id DESC")
-    suspend fun getAllPalettesWithColors(): List<PaletteWithColors>
+    fun getAllPalettesWithColors(): Flow<List<PaletteWithColors>>
 
     @Delete
     suspend fun deletePalette(palette: PaletteEntity)

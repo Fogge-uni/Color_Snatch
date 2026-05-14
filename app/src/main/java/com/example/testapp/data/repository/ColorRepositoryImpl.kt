@@ -6,6 +6,8 @@ import com.example.testapp.data.local.entities.PaletteEntity
 import com.example.testapp.domain.model.Color
 import com.example.testapp.domain.model.Palette
 import com.example.testapp.domain.repository.ColorRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class ColorRepositoryImpl(
     private val database: AppDatabase
@@ -38,19 +40,21 @@ class ColorRepositoryImpl(
         return paletteId
     }
 
-    override suspend fun getStandaloneColors(): List<Color> {
-        return database.colorDao().getStandaloneColors().map { entity ->
-            Color(id = entity.id, hex = entity.hexCode)
+    override fun getStandaloneColors(): Flow<List<Color>> {
+        return database.colorDao().getStandaloneColors().map { entities ->
+            entities.map {entity -> Color(id = entity.id, hex = entity.hexCode) }
+
         }
     }
 
-    override suspend fun getAllPalettes(): List<Palette> {
-        return database.paletteDao().getAllPalettesWithColors().map { pwc ->
-            Palette(
+    override fun getAllPalettes(): Flow<List<Palette>> {
+        return database.paletteDao().getAllPalettesWithColors().map { list ->
+            list.map { pwc -> Palette(
                 id = pwc.palette.id,
                 name = pwc.palette.name,
                 colors = pwc.colors.map { Color(id = it.id, hex = it.hexCode) }
-            )
+                )
+            }
         }
     }
 

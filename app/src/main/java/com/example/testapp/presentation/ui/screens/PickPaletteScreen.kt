@@ -1,7 +1,9 @@
 package com.example.testapp.presentation.ui.screens
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,6 +24,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -35,7 +38,8 @@ import com.example.testapp.presentation.viewmodel.PickPaletteViewModel
 import com.example.testapp.utils.deletePhotoFile
 import com.example.testapp.utils.getColorAtPosition
 import com.example.testapp.utils.isDarkColor
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 
@@ -46,26 +50,56 @@ fun PickPaletteScreen(
     navController: NavController,
     viewModel: PickPaletteViewModel
 ) {
-    val bitmap = remember(photoPath) { BitmapFactory.decodeFile(photoPath) }
-    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    LaunchedEffect(photoPath) {
+        bitmap = withContext(Dispatchers.IO) {
+            BitmapFactory.decodeFile(photoPath)
+        }
+    }
+    DisposableEffect(photoPath) {
+        onDispose {
+            deletePhotoFile(photoPath)
+            bitmap?.recycle()
+        }
+    }
+
+    val saved by viewModel.saved.collectAsState()
+    val error by viewModel.error.collectAsState()
+
+    LaunchedEffect(saved) {
+        if (saved) {
+            navController.navigate(Screen.Home.route) {
+                popUpTo(Screen.Home.route) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
+
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
+    }
 
     val pickerPositions = remember { mutableStateListOf<Offset>() }
     var activePickerIndex by remember { mutableIntStateOf(0) }
     var showNameDialog by remember { mutableStateOf(false) }
     var paletteName by remember { mutableStateOf("") }
-
     var containerSize by remember { mutableStateOf(IntSize.Zero) }
 
-    DisposableEffect(Unit) {
-        onDispose {
-            deletePhotoFile(photoPath)
+    if (bitmap == null) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            CircularProgressIndicator()
         }
+        return
     }
 
-    LaunchedEffect(bitmap) {
+    LaunchedEffect(bitmap!!) {
         if (bitmap != null && pickerPositions.isEmpty()) {
-            val width = bitmap.width.toFloat()
-            val height = bitmap.height.toFloat()
+            val width = bitmap!!.width.toFloat()
+            val height = bitmap!!.height.toFloat()
             pickerPositions.addAll(
                 listOf(
                     Offset(width * 0.3f, height * 0.5f),
@@ -145,7 +179,7 @@ fun PickPaletteScreen(
                                             activePickerIndex = nearestIndex
                                             val draggedIndex = nearestIndex
 
-                                            var pointerId = down.id
+                                            val pointerId = down.id
                                             while (true) {
                                                 val event = awaitPointerEvent()
                                                 val pointer = event.changes
@@ -216,8 +250,8 @@ fun PickPaletteScreen(
                         onClick = {
                             if (bitmap != null && pickerPositions.size < 8) {
                                 val newOffset = Offset(
-                                    bitmap.width * 0.5f,
-                                    bitmap.height * 0.5f
+                                    bitmap!!.width * 0.5f,
+                                    bitmap!!.height * 0.5f
                                 )
                                 pickerPositions.add(newOffset)
                                 activePickerIndex = pickerPositions.lastIndex
@@ -300,18 +334,8 @@ fun PickPaletteScreen(
                 Button(
                     onClick = {
                         if (paletteName.isNotBlank() && selectedColors.isNotEmpty()) {
-                            scope.launch {
-                                viewModel.savePalette(
-                                    name = paletteName.trim(),
-                                    hexColors = selectedColors,
-                                    photoPath = photoPath
-                                )
-                                navController.navigate(Screen.Home.route) {
-                                    popUpTo(Screen.Home.route) { inclusive = true }
-                                    launchSingleTop = true
-                                }
-                            }
-                        }
+                            viewModel.savePalette(name = paletteName.trim(),
+                                hexColors = selectedColors) }
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = primaryContainerDark,

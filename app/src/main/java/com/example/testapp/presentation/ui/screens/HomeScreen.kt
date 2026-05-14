@@ -38,10 +38,15 @@ fun HomeScreen(
 ) {
     val palettes by viewModel.palettes.collectAsState()
     val colors by viewModel.colors.collectAsState()
+    val error by viewModel.error.collectAsState()
     var selectedTab by remember { mutableIntStateOf(0) }
 
-    LaunchedEffect(Unit) {
-        viewModel.loadData()
+    val context = LocalContext.current
+    LaunchedEffect(error) {
+        error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_LONG).show()
+            viewModel.clearError()
+        }
     }
 
     Scaffold(
@@ -109,24 +114,34 @@ fun ColorListScreen(
     var selectedColorForDetail by remember { mutableStateOf<Color?>(null) }
 
     Box(modifier = modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 96.dp)
-        ) {
-            items(colors, key = { it.id }) { color ->
-                ColorCard(
-                    color = color,
-                    viewModel = viewModel,
-                    onClick = { selectedColorForDetail = color }
+        if (colors.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = "No colors are saved yet ",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 96.dp)
+            ) {
+                items(colors, key = { it.id }) { color ->
+                    ColorCard(
+                        color = color,
+                        viewModel = viewModel,
+                        onClick = { selectedColorForDetail = color }
+                    )
+                }
+            }
 
-        selectedColorForDetail?.let { color ->
-            ColorDetailDialog(
-                color = color,
-                onDismiss = { selectedColorForDetail = null }
-            )
+            selectedColorForDetail?.let { color ->
+                ColorDetailDialog(
+                    color = color,
+                    onDismiss = { selectedColorForDetail = null }
+                )
+            }
         }
     }
 }
@@ -138,7 +153,7 @@ fun ColorCard(
     onClick: () -> Unit
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
-    val colorInt = color.hex.toColorInt()
+    val colorInt = remember(color.hex) { color.hex.toColorInt() }
 
     Card(
         modifier = Modifier
@@ -216,24 +231,34 @@ fun PaletteListScreen(
     var selectedPalette by remember { mutableStateOf<Palette?>(null) }
 
     Box(modifier = modifier.fillMaxSize()) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 96.dp)
-        ) {
-            items(palettes, key = { it.id }) { palette ->
-                PaletteCard(
-                    palette = palette,
-                    viewModel = viewModel,
-                    onClick = { selectedPalette = palette }
+        if (palettes.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(
+                    text = "No palettes are saved yet",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-        }
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 96.dp)
+            ) {
+                items(palettes, key = { it.id }) { palette ->
+                    PaletteCard(
+                        palette = palette,
+                        viewModel = viewModel,
+                        onClick = { selectedPalette = palette }
+                    )
+                }
+            }
 
-        selectedPalette?.let { palette ->
-            PaletteDetailDialog(
-                palette = palette,
-                onDismiss = { selectedPalette = null }
-            )
+            selectedPalette?.let { palette ->
+                PaletteDetailDialog(
+                    palette = palette,
+                    onDismiss = { selectedPalette = null }
+                )
+            }
         }
     }
 }
