@@ -2,6 +2,7 @@ package com.example.testapp.utils
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import androidx.core.graphics.toColorInt
 import kotlin.math.abs
 import kotlin.math.cbrt
 import kotlin.math.pow
@@ -116,7 +117,7 @@ fun rgbToLabString(r: Int, g: Int, b: Int): String{
     return "$L, $A, $B"
 }
 fun isDarkColor(hex: String): Boolean {
-    val color = Color.parseColor(hex)
+    val color = hex.toColorInt()
     val darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255
     return darkness >= 0.5
 }
