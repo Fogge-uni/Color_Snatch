@@ -25,6 +25,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,7 @@ import com.example.testapp.utils.isDarkColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
-
+import com.example.testapp.R
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
@@ -314,7 +315,7 @@ fun PickPaletteScreen(
                     contentColor = onPrimaryContainerDark
                 )
             ) {
-                Text("Save palette", style = MaterialTheme.typography.titleLarge)
+                Text(stringResource(R.string.save_palette), style = MaterialTheme.typography.titleLarge)
             }
         }
     }
@@ -322,7 +323,7 @@ fun PickPaletteScreen(
     if (showNameDialog) {
         AlertDialog(
             onDismissRequest = { showNameDialog = false },
-            title = { Text("Name your palette") },
+            title = { Text(stringResource(R.string.name_palette)) },
             text = {
                 OutlinedTextField(
                     value = paletteName,
@@ -353,7 +354,7 @@ fun PickPaletteScreen(
                         contentColor = onPrimaryContainerDark
                     )
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

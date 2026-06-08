@@ -1,3 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">testapp</string>
+    <string name="tab_colors">Colors</string>
+    <string name="tab_palettes">Palettes</string>
+
+    <string name="snatch_color">Snatch Color</string>
+    <string name="create_palette">Create palette</string>
+    <string name="choose_photo">Choose this photo</string>
+    <string name="retake">Retake</string>
+    <string name="take_photo">Take photo</string>
+    <string name="save_color">Save color</string>
+    <string name="save_palette">Save palette</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="back_to_home">Back to home</string>
+    <string name="add_color">Add color</string>
+    <string name="delete_color">Delete color</string>
+
+    <string name="delete_color_title">Delete color</string>
+    <string name="delete_color_message">Are you sure you want to delete this color?</string>
+    <string name="delete_palette_title">Delete palette</string>
+    <string name="delete_palette_message">Are you sure you want to delete this palette?</string>
+    <string name="name_palette">Name your palette</string>
+
+    <string name="no_colors_saved">No colors are saved yet</string>
+    <string name="no_palettes_saved">No palettes are saved yet</string>
+    <string name="copied">Copied: %1$s</string>
+
+    <string name="camera_permission_text">Camera permission is required to use this screen.</string>
+    <string name="grant_camera_permission">Grant camera permission</string>
+
+    <string name="language">Language</string>
+    <string name="choose_language">Choose language</string>
+    <string name="english">English</string>
+    <string name="russian">Russian</string>
+
+    <string name="settings">Settings</string>
 </resources>

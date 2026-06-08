@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,7 +31,7 @@ import com.example.testapp.presentation.viewmodel.HomeViewModel
 import com.example.testapp.utils.buildColorCodes
 import com.example.testapp.utils.copyToClipboard
 import androidx.compose.ui.graphics.Color as ComposeColor
-
+import com.example.testapp.R
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -55,13 +56,22 @@ fun HomeScreen(
                 Tab(
                     selected = selectedTab == 0,
                     onClick = { selectedTab = 0 },
-                    text = { Text("Colors", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge) }
+                    text = { Text(stringResource(R.string.tab_colors), color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge) }
                 )
                 Tab(
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 },
-                    text = { Text("Palettes", color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge) }
+                    text = { Text(stringResource(R.string.tab_palettes), color = MaterialTheme.colorScheme.onPrimaryContainer, style = MaterialTheme.typography.titleLarge) }
                 )
+            }
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                TextButton(onClick = { navController.navigate(Screen.Settings.route) }) {
+                    Text(
+                        stringResource(R.string.settings),
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
             }
         },
         floatingActionButton = {
@@ -73,14 +83,14 @@ fun HomeScreen(
                         onClick = {
                             val mode = if (selectedTab == 0) "color" else "palette"
                             navController.navigate(Screen.Camera.createRoute(mode))
-                        }, modifier = Modifier.width(180.dp).height(56.dp),
+                        }, modifier = Modifier.width(240.dp).height(56.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = primaryContainerDark,
                             contentColor = onPrimaryContainerDark
                         )
                     ) {
                         Text(
-                            text = if (selectedTab == 0) "Snatch Color" else "Create palette", style = MaterialTheme.typography.titleLarge
+                            text = if (selectedTab == 0) stringResource(R.string.snatch_color) else stringResource(R.string.create_palette), style = MaterialTheme.typography.titleLarge
                         )
                     }
             }
@@ -117,7 +127,7 @@ fun ColorListScreen(
         if (colors.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No colors are saved yet ",
+                    text = stringResource(R.string.no_colors_saved),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -194,8 +204,8 @@ fun ColorCard(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete color") },
-            text = { Text("Are you sure you want to delete this color?") },
+            title = { Text(stringResource(R.string.delete_color_title)) },
+            text = { Text(stringResource(R.string.delete_color_message)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -206,7 +216,7 @@ fun ColorCard(
                         contentColor = onPrimaryContainerDark
                     )
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
@@ -215,7 +225,7 @@ fun ColorCard(
                     containerColor = primaryContainerDark,
                     contentColor = onPrimaryContainerDark
                 )) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -234,7 +244,7 @@ fun PaletteListScreen(
         if (palettes.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(
-                    text = "No palettes are saved yet",
+                    text = stringResource(R.string.no_palettes_saved),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -293,7 +303,7 @@ fun PaletteCard(
                     fontSize = 18.sp
                 )
                 IconButton(onClick = { showDeleteDialog = true }) {
-                    Icon(Icons.Default.Delete, contentDescription = "Delete")
+                    Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
                 }
             }
 
@@ -320,8 +330,8 @@ fun PaletteCard(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete palette") },
-            text = { Text("Are you sure you want to delete this palette?") },
+            title = { Text(stringResource(R.string.delete_palette_title)) },
+            text = { Text(stringResource(R.string.delete_palette_message)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -332,7 +342,7 @@ fun PaletteCard(
                         contentColor = onPrimaryContainerDark
                     )
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
@@ -340,7 +350,7 @@ fun PaletteCard(
                     containerColor = primaryContainerDark,
                     contentColor = onPrimaryContainerDark
                 )) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -408,7 +418,7 @@ fun PaletteDetailDialog(
                         containerColor = primaryContainerDark,
                         contentColor = onPrimaryContainerDark
                     )) {
-                        Text("Close")
+                        Text(stringResource(R.string.close))
                     }
                 }
             }
@@ -471,7 +481,7 @@ fun ColorDetailDialog(
                 containerColor = primaryContainerDark,
                 contentColor = onPrimaryContainerDark
             )) {
-                Text("Close")
+                Text(stringResource(R.string.close))
             }
         }
     )

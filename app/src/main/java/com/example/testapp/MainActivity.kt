@@ -1,5 +1,7 @@
 package com.example.testapp
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,10 +11,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.compose.AppTheme
 import com.example.testapp.presentation.AppNavigation
+import java.util.Locale
 
 class MainActivity : ComponentActivity() {
 
     private lateinit var appContainer: AppContainer
+
+    override fun attachBaseContext(newBase: Context?) {
+        val prefs = newBase?.getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val lang = prefs?.getString("language", "en") ?: "en"
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val config = Configuration(newBase?.resources?.configuration)
+        config.setLocale(locale)
+        val localizedContext = newBase?.createConfigurationContext(config)
+        super.attachBaseContext(localizedContext ?: newBase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

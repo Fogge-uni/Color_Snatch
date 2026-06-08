@@ -13,6 +13,7 @@ import com.example.testapp.presentation.ui.screens.CameraScreen
 import com.example.testapp.presentation.ui.screens.HomeScreen
 import com.example.testapp.presentation.ui.screens.PickColorScreen
 import com.example.testapp.presentation.ui.screens.PickPaletteScreen
+import com.example.testapp.presentation.ui.screens.SettingsScreen
 import com.example.testapp.presentation.viewmodel.HomeFactory
 import com.example.testapp.presentation.viewmodel.HomeViewModel
 import com.example.testapp.presentation.viewmodel.PickColorFactory
@@ -34,6 +35,7 @@ sealed class Screen(val route: String) {
     object PickPalette : Screen("pick_palette/{photoPath}") {
         fun passPath(path: String): String = "pick_palette/${Uri.encode(path)}"
     }
+    object Settings : Screen("settings")
 }
 
 @Composable
@@ -53,6 +55,12 @@ fun AppNavigation(appContainer: AppContainer) {
             )
             val viewModel: HomeViewModel = viewModel(factory = factory)
             HomeScreen(navController = navController, viewModel = viewModel)
+        }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                onBack = { navController.popBackStack() }
+            )
         }
 
         composable(

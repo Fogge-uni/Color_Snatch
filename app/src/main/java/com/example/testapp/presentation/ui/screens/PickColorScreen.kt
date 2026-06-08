@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -38,6 +39,7 @@ import com.github.skydoves.colorpicker.compose.PaletteContentScale
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.example.testapp.R
 
 @Composable
 fun PickColorScreen(
@@ -153,7 +155,7 @@ fun PickColorScreen(
                         ),
                         modifier = Modifier.width(160.dp).height(70.dp).padding(8.dp),
                     ) {
-                        Text("Save color", style = MaterialTheme.typography.titleLarge)
+                        Text(stringResource(R.string.save_color), style = MaterialTheme.typography.titleLarge)
                     }
                 }
             }

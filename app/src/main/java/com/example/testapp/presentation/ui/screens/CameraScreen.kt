@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -35,6 +36,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import java.util.concurrent.Executors
+import com.example.testapp.R
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -82,10 +84,10 @@ fun CameraScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text("Для работы этого экрана нужен доступ к камере.")
+                Text(stringResource(R.string.camera_permission_text))
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = { cameraPermissionState.launchPermissionRequest() }) {
-                    Text("Разрешить доступ к камере")
+                    Text(stringResource(R.string.grant_camera_permission))
                 }
             }
         }
@@ -147,7 +149,7 @@ fun CameraScreen(
                             contentColor = onPrimaryContainerDark
                         )
                     ) {
-                        Text("Choose this photo", style = MaterialTheme.typography.bodyLarge)
+                        Text(stringResource(R.string.choose_photo), style = MaterialTheme.typography.bodyLarge)
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -158,7 +160,7 @@ fun CameraScreen(
                             contentColor = onPrimaryContainerDark
                         )
                     ) {
-                        Text("Retake", style = MaterialTheme.typography.titleLarge)
+                        Text(stringResource(R.string.retake), style = MaterialTheme.typography.titleLarge)
                     }
                 }
             }
@@ -250,7 +252,7 @@ fun CameraCaptureView(
                 .width(250.dp)
                 .height(56.dp)
         ) {
-            Text("Take photo", style = MaterialTheme.typography.titleLarge)
+            Text(stringResource(R.string.take_photo), style = MaterialTheme.typography.titleLarge)
         }
     }
 }
