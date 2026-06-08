@@ -2,16 +2,14 @@ package com.example.ui.theme
 
 import com.example.testapp.R
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 
 
-val bodyFontFamily = FontFamily(Font(R.font.amaranth_regular))
 
-val displayFontFamily = FontFamily(Font(R.font.amaranth_regular))
+val bodyFontFamily = FontFamily(Font(R.font.gabriela_regular))
+
+val displayFontFamily = FontFamily(Font(R.font.gabriela_regular))
 val baseline = Typography()
 
 val AppTypography = Typography(
