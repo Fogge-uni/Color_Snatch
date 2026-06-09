@@ -31,10 +31,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val prefs = getSharedPreferences("app_settings", Context.MODE_PRIVATE)
+        val themeMode = prefs.getString("theme_mode", "system") ?: "system"
+        val darkTheme: Boolean? = when (themeMode) {
+            "dark" -> true
+            "light" -> false
+            else -> null
+        }
+
         appContainer = AppContainer(this)
 
         setContent {
-            AppTheme {
+            AppTheme(darkTheme = darkTheme) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

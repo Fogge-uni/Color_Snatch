@@ -55,25 +55,29 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.primaryContainer)
-                        .padding(horizontal = 16.dp, vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+                Surface(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(
-                        text = "Color Snatch",
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
-                    IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
-                        Icon(
-                            imageVector = Icons.Default.Settings,
-                            contentDescription = stringResource(R.string.settings),
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Color Snatch",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.primaryContainer,
                         )
+                        IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
+                            Icon(
+                                imageVector = Icons.Default.Settings,
+                                contentDescription = stringResource(R.string.settings),
+                                tint = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        }
                     }
                 }
 
@@ -84,8 +88,8 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.tab_colors),
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                style = MaterialTheme.typography.titleLarge
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.titleMedium
                             )
                         }
                     )
@@ -95,8 +99,8 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.tab_palettes),
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                style = MaterialTheme.typography.titleLarge
+                                color = MaterialTheme.colorScheme.onSurface,
+                                style = MaterialTheme.typography.titleMedium
                             )
                         }
                     )
@@ -158,7 +162,7 @@ fun ColorListScreen(
                 Text(
                     text = stringResource(R.string.no_colors_saved),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         } else {
@@ -197,7 +201,7 @@ fun ColorCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 6.dp)
+            .padding(horizontal = 16.dp, vertical = 6.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer)
@@ -205,7 +209,7 @@ fun ColorCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(10.dp),
+                .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -216,12 +220,16 @@ fun ColorCard(
                         .clip(RoundedCornerShape(8.dp))
                         .background(ComposeColor(colorInt))
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(color.hex, fontFamily = FontFamily.Monospace, color = MaterialTheme.colorScheme.onSecondaryContainer)
+                    Text(color.hex,
+                        fontFamily = FontFamily.Monospace,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer)
                     Text(
                         "RGB: ${android.graphics.Color.red(colorInt)}, ${android.graphics.Color.green(colorInt)}, ${android.graphics.Color.blue(colorInt)}",
                         fontSize = 14.sp,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }
@@ -277,7 +285,7 @@ fun PaletteListScreen(
                 Text(
                     text = stringResource(R.string.no_palettes_saved),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             }
         } else {
@@ -318,7 +326,7 @@ fun PaletteCard(
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            containerColor = MaterialTheme.colorScheme.primaryContainer)
     ) {
         Column(
             modifier = Modifier
