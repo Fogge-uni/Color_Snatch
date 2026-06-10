@@ -6,7 +6,7 @@
 
     <string name="snatch_color">Snatch Color</string>
     <string name="create_palette">Create palette</string>
-    <string name="choose_photo">Choose this photo</string>
+    <string name="choose_photo">Choose\nthis photo</string>
     <string name="retake">Retake</string>
     <string name="take_photo">Take photo</string>
     <string name="save_color">Save color</string>
@@ -17,6 +17,7 @@
     <string name="back_to_home">Back to home</string>
     <string name="add_color">Add color</string>
     <string name="delete_color">Delete color</string>
+    <string name="save">Save</string>
 
     <string name="delete_color_title">Delete color</string>
     <string name="delete_color_message">Are you sure you want to delete this color?</string>
@@ -42,4 +43,5 @@
     <string name="system_theme">System default</string>
     <string name="light_theme">Light</string>
     <string name="dark_theme">Dark</string>
+    <string name="save_changes">Save changes</string>
 </resources>

@@ -308,7 +308,7 @@ fun PickPaletteScreen(
             Button(
                 onClick = { showNameDialog = true },
                 modifier = Modifier
-                    .width(200.dp)
+                    .fillMaxWidth()
                     .padding(12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = primaryContainerDark,
@@ -343,7 +343,7 @@ fun PickPaletteScreen(
                         contentColor = onPrimaryContainerDark
                     )
                 ) {
-                    Text("Save")
+                    Text(stringResource(R.string.save))
                 }
             },
             dismissButton = {

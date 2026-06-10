@@ -49,10 +49,9 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            // ---- Язык ----
             Text(
                 text = stringResource(R.string.language),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(16.dp)
             )
 
@@ -64,12 +63,17 @@ fun SettingsScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable { selectedLang = code }
-                        .padding(horizontal = 24.dp, vertical = 12.dp),
+                        .padding(horizontal = 16.dp, vertical = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     RadioButton(
                         selected = selectedLang == code,
-                        onClick = { selectedLang = code }
+                        onClick = { selectedLang = code },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colorScheme.tertiary,
+                            unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(text = name, style = MaterialTheme.typography.bodyLarge)
@@ -78,10 +82,9 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ---- Тема ----
             Text(
                 text = stringResource(R.string.theme),
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(16.dp)
             )
 
@@ -99,7 +102,11 @@ fun SettingsScreen(
                 ) {
                     RadioButton(
                         selected = selectedTheme == code,
-                        onClick = { selectedTheme = code }
+                        onClick = { selectedTheme = code },
+                        colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colorScheme.tertiary,
+                            unselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
                     )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(text = name, style = MaterialTheme.typography.bodyLarge)
@@ -108,19 +115,26 @@ fun SettingsScreen(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Button(
-                onClick = {
-                    prefs.edit()
-                        .putString("language", selectedLang)
-                        .putString("theme_mode", selectedTheme)
-                        .apply()
-                    (context as? Activity)?.recreate()
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp)
+                    .padding(horizontal = 16.dp, vertical = 16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Text(stringResource(R.string.save_color)) // или "Применить"
+                Button(
+                    onClick = {
+                        prefs.edit()
+                            .putString("language", selectedLang)
+                            .putString("theme_mode", selectedTheme)
+                            .apply()
+                        (context as? Activity)?.recreate()
+                    },
+                    modifier = Modifier
+                        .width(240.dp)
+                        .height(56.dp)
+                ) {
+                    Text(stringResource(R.string.save_changes), style = MaterialTheme.typography.bodyLarge)
+                }
             }
         }
     }

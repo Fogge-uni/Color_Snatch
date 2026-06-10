@@ -4,12 +4,12 @@ import com.example.testapp.R
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 
 
+val bodyFontFamily = FontFamily(Font(R.font.marmelad_regular))
 
-val bodyFontFamily = FontFamily(Font(R.font.gabriela_regular))
-
-val displayFontFamily = FontFamily(Font(R.font.gabriela_regular))
+val displayFontFamily = FontFamily(Font(R.font.marmelad_regular, FontWeight.Bold))
 val baseline = Typography()
 
 val AppTypography = Typography(

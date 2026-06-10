@@ -153,7 +153,7 @@ fun PickColorScreen(
                             containerColor = primaryContainerDark,
                             contentColor = onPrimaryContainerDark
                         ),
-                        modifier = Modifier.width(160.dp).height(70.dp).padding(8.dp),
+                        modifier = Modifier.width(240.dp).height(70.dp).padding(8.dp),
                     ) {
                         Text(stringResource(R.string.save_color), style = MaterialTheme.typography.titleLarge)
                     }

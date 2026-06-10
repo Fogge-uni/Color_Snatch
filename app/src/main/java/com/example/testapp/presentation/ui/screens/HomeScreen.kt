@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,8 @@ import com.example.testapp.utils.buildColorCodes
 import com.example.testapp.utils.copyToClipboard
 import androidx.compose.ui.graphics.Color as ComposeColor
 import com.example.testapp.R
+import com.example.compose.primaryLight
+import com.example.compose.onPrimaryLight
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -56,7 +59,7 @@ fun HomeScreen(
         topBar = {
             Column {
                 Surface(
-                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    color = primaryLight,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Row(
@@ -68,14 +71,15 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = "Color Snatch",
-                            style = MaterialTheme.typography.titleLarge,
-                            color = MaterialTheme.colorScheme.primaryContainer,
+                            fontFamily = FontFamily(Font(R.font.lobster_regular)),
+                            fontSize = 30.sp,
+                            color = onPrimaryLight,
                         )
                         IconButton(onClick = { navController.navigate(Screen.Settings.route) }) {
                             Icon(
                                 imageVector = Icons.Default.Settings,
                                 contentDescription = stringResource(R.string.settings),
-                                tint = MaterialTheme.colorScheme.primaryContainer
+                                tint = onPrimaryLight
                             )
                         }
                     }
@@ -88,8 +92,8 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.tab_colors),
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.titleMedium
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                style = MaterialTheme.typography.titleLarge
                             )
                         }
                     )
@@ -99,33 +103,44 @@ fun HomeScreen(
                         text = {
                             Text(
                                 stringResource(R.string.tab_palettes),
-                                color = MaterialTheme.colorScheme.onSurface,
-                                style = MaterialTheme.typography.titleMedium
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                style = MaterialTheme.typography.titleLarge
                             )
                         }
                     )
                 }
             }
         },
-        floatingActionButton = {
-            Box(
-                modifier = Modifier.fillMaxWidth().height(56.dp),
-                contentAlignment = Alignment.Center
+        bottomBar = {
+            Surface(
+                color = MaterialTheme.colorScheme.background
             ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp, vertical = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
                     Button(
                         onClick = {
                             val mode = if (selectedTab == 0) "color" else "palette"
                             navController.navigate(Screen.Camera.createRoute(mode))
-                        }, modifier = Modifier.width(240.dp).height(56.dp),
+                        },
+                        modifier = Modifier
+                            .height(54.dp)
+                            .width(240.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = primaryContainerDark,
                             contentColor = onPrimaryContainerDark
-                        )
+                        ),
                     ) {
                         Text(
-                            text = if (selectedTab == 0) stringResource(R.string.snatch_color) else stringResource(R.string.create_palette), style = MaterialTheme.typography.titleLarge
+                            text = if (selectedTab == 0) stringResource(R.string.snatch_color)
+                            else stringResource(R.string.create_palette),
+                            style = MaterialTheme.typography.titleLarge
                         )
                     }
+                }
             }
         }
     ) { padding ->
@@ -162,7 +177,7 @@ fun ColorListScreen(
                 Text(
                     text = stringResource(R.string.no_colors_saved),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         } else {
@@ -204,7 +219,7 @@ fun ColorCard(
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
         ) {
         Row(
             modifier = Modifier
@@ -285,7 +300,7 @@ fun PaletteListScreen(
                 Text(
                     text = stringResource(R.string.no_palettes_saved),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
             }
         } else {
@@ -326,7 +341,7 @@ fun PaletteCard(
             .padding(horizontal = 8.dp, vertical = 6.dp)
             .clickable { onClick() },
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer)
+            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh)
     ) {
         Column(
             modifier = Modifier

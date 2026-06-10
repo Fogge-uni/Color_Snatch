@@ -5,7 +5,7 @@
     <string name="tab_colors">Цвета</string>
     <string name="tab_palettes">Палитры</string>
 
-    <string name="snatch_color">Схватить цвет</string>
+    <string name="snatch_color">Взять цвет</string>
     <string name="create_palette">Создать палитру</string>
     <string name="choose_photo">Выбрать фото</string>
     <string name="retake">Переснять</string>
@@ -18,18 +18,20 @@
         <string name="back_to_home">На главную</string>
         <string name="add_color">Добавить цвет</string>
         <string name="delete_color">Удалить цвет</string>
+        <string name="save">Сохранить</string>
+
 
         <string name="delete_color_title">Удалить цвет</string>
         <string name="delete_color_message">Вы уверены, что хотите удалить этот цвет?</string>
         <string name="delete_palette_title">Удалить палитру</string>
         <string name="delete_palette_message">Вы уверены, что хотите удалить эту палитру?</string>
-        <string name="name_palette">Назовите палитру</string>
+        <string name="name_palette">Название палитры</string>
 
-        <string name="no_colors_saved">Нет сохранённых цветов</string>
-        <string name="no_palettes_saved">Нет сохранённых палитр</string>
+        <string name="no_colors_saved">Ни один цвет ещё не был сохранён</string>
+        <string name="no_palettes_saved">Ни одна палитра ещё не была сохранена</string>
         <string name="copied">Скопировано: %1$s</string>
 
-        <string name="camera_permission_text">Для работы этого экрана нужен доступ к камере.</string>
+        <string name="camera_permission_text">Для последующей работы нужен доступ к камере.</string>
         <string name="grant_camera_permission">Разрешить доступ к камере</string>
 
         <string name="language">Язык</string>
@@ -39,7 +41,8 @@
         <string name="settings">Настройки</string>
 
     <string name="theme">Тема</string>
-    <string name="system_theme">Системная</string>
+    <string name="system_theme">Как в системе</string>
     <string name="light_theme">Светлая</string>
     <string name="dark_theme">Тёмная</string>
+    <string name="save_changes">Сохранить изменения</string>
 </resources>
